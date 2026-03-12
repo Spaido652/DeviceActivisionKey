@@ -1,1 +1,15 @@
+[
+    {
+        "device_id": "",
+        "key": "ADMIN-1234",
+        "expirydate": "2026-12-31",
+        "Allowoffline": true
+    },
+    {
+        "device_id": "",
+        "key": "USER-9999",
+        "expirydate": "2026-05-20",
+        "Allowoffline": false
+    }
+]
 
