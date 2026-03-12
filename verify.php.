@@ -1,0 +1,38 @@
+<?php
+$key_from_app = $_GET['key'];
+$hwid_from_app = $_GET['hwid'];
+$file = 'keys.json';
+
+// Read the current keys
+$data = json_decode(file_get_contents($file), true);
+$found = false;
+$response = "INVALID_KEY";
+
+foreach ($data as &$user) {
+    if ($user['key'] === $key_from_app) {
+        $found = true;
+        
+        // 1. Check Expiry
+        if (time() > strtotime($user['expirydate'])) {
+            $response = "EXPIRED";
+            break;
+        }
+
+        // 2. Check Device Binding (First-time use)
+        if (empty($user['device_id'])) {
+            $user['device_id'] = $hwid_from_app; // Bind it!
+            file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
+            $response = "SUCCESS";
+        } 
+        // 3. Check if Hardware matches
+        else if ($user['device_id'] === $hwid_from_app) {
+            $response = "SUCCESS";
+        } else {
+            $response = "INVALID_DEVICE";
+        }
+        break;
+    }
+}
+
+echo $response;
+?>
